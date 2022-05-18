@@ -26,9 +26,19 @@ describe('Create Rental', () => {
   });
 
   it('should be able to create a new rental', async () => {
+    const car = await carsRepositoryInMemory.create({
+      name: 'teste',
+      description: 'teste',
+      daily_rate: 100,
+      license_plate: 'teste',
+      fine_amount: 340,
+      category_id: 'teste',
+      brand: 'teste',
+    });
+
     const rental = await createRentalUseCase.execute({
       user_id: '123123',
-      car_id: '123213',
+      car_id: car.id,
       expected_return_date: dayAdd24Hours,
     });
 
@@ -36,32 +46,64 @@ describe('Create Rental', () => {
   });
 
   it('should not be able to create a new rental if there is another open to the same user', async () => {
+    const car = await carsRepositoryInMemory.create({
+      name: 'teste',
+      description: 'teste',
+      daily_rate: 100,
+      license_plate: 'teste',
+      fine_amount: 340,
+      category_id: 'teste',
+      brand: 'teste',
+    });
+
+    const car1 = await carsRepositoryInMemory.create({
+      name: 'teste',
+      description: 'teste',
+      daily_rate: 100,
+      license_plate: 'teste',
+      fine_amount: 340,
+      category_id: 'teste',
+      brand: 'teste',
+    });
+
+    const fakeUserId = 'testeUserId';
+
     await createRentalUseCase.execute({
-      user_id: '123123',
-      car_id: '123213',
+      user_id: fakeUserId,
+      car_id: car.id,
       expected_return_date: dayAdd24Hours,
     });
 
     await expect(
       createRentalUseCase.execute({
-        user_id: '123123',
-        car_id: '123213',
+        user_id: fakeUserId,
+        car_id: car1.id,
         expected_return_date: dayAdd24Hours,
       })
     ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to create a new rental if there is another open to the same car', async () => {
+    const car = await carsRepositoryInMemory.create({
+      name: 'teste',
+      description: 'teste',
+      daily_rate: 100,
+      license_plate: 'teste',
+      fine_amount: 340,
+      category_id: 'teste',
+      brand: 'teste',
+    });
+
     await createRentalUseCase.execute({
       user_id: 'xxxx',
-      car_id: 'test id',
+      car_id: car.id,
       expected_return_date: dayAdd24Hours,
     });
 
     await expect(
       createRentalUseCase.execute({
         user_id: 'yyyy',
-        car_id: 'test id',
+        car_id: car.id,
         expected_return_date: dayAdd24Hours,
       })
     ).rejects.toBeInstanceOf(AppError);
