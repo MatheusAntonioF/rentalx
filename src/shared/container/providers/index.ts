@@ -20,7 +20,7 @@ const diskStorage = {
   s3: S3StorageProvider,
 };
 
-container.registerInstance<IStorageProvider>(
+container.registerSingleton<IStorageProvider>(
   'StorageProvider',
   diskStorage[process.env.disk]
 );
