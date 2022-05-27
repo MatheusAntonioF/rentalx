@@ -1,8 +1,15 @@
 node_modules
 .vscode
+
+# using this sintax tmp dir will be uploaded but the files inside will not be
 tmp/*
 
+# this sintax will keep that the tmp dir will be uploaded
+!tmp/.gitkeep
 .env
 
 coverage
 dist
+
+ormconfig.json
+
