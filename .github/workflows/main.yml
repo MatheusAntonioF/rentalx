@@ -38,7 +38,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: "., !node_modules" # we add this sintax: !name_file to ignore this file when send the code
-          target: "/app/rentalx"
+          target: "~/app/rentalx"
       
       
 
